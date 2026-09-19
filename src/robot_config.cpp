@@ -4,7 +4,7 @@
 #include <random>
 
 // controller
-pros::Controller controller(pros::E_CONTROLLER_MASTER);
+// pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 // intake
 pros::Motor intakeMotor(10, pros::MotorGearset::blue);
@@ -13,12 +13,12 @@ pros::Motor intakeMotor(10, pros::MotorGearset::blue);
 pros::Motor outtakeMotor(-17, pros::MotorGearset::blue);
 
 // drivetrain left
-pros::MotorGroup leftMotors({-11, -12, -13}, pros::MotorGearset::blue);
-pros::MotorGroup rightMotors({14, 15, 16}, pros::MotorGearset::blue);
+// pros::MotorGroup leftMotors({-11, -12, -13}, pros::MotorGearset::blue);
+// pros::MotorGroup rightMotors({14, 15, 16}, pros::MotorGearset::blue);
 
 // odometry wheels
-pros::Rotation verticalEnc(-9);
-pros::Rotation horizontalEnc(-18);
+// pros::Rotation verticalEnc(-9);
+// pros::Rotation horizontalEnc(-18);
 
 // pneumatics
 PneumaticActuator loaderActuator(1);
@@ -33,26 +33,26 @@ pros::Optical optical(19);
 pros::Distance distance_front(20);
 
 // imu tracks the robot's orientation
-pros::Imu imu(5);
+//pros::Imu imu(5);
 
 
 
 // lemlib defs
-lemlib::TrackingWheel vertical(&verticalEnc, lemlib::Omniwheel::NEW_275, 0);
+/* lemlib::TrackingWheel vertical(&verticalEnc, lemlib::Omniwheel::NEW_275, 0);
 lemlib::TrackingWheel horizontal(&horizontalEnc, lemlib::Omniwheel::NEW_275,
-                                 -2);
+                                 -2);*/
 
-lemlib::Drivetrain drivetrain(
+/*lemlib::Drivetrain drivetrain(
     &leftMotors,                // left motor group
     &rightMotors,               // right motor group
     11.34,                      // 10 inch track width
     lemlib::Omniwheel::NEW_325, // using new 3.25" omnis
     450,                        // drivetrain rpm is 400
     4 // horizontal drift is 2. If we had traction wheels, it would have been 8
-);
+);*/
 
 // lateral motion controller
-lemlib::ControllerSettings
+/*lemlib::ControllerSettings
     linearController(12.5,  // proportional gain (kP)
                      0.001, // integral gain (kI)
                      50,    // derivative gain (kD)
@@ -74,7 +74,7 @@ lemlib::ControllerSettings
                       0,     // large error range, in degrees
                       0,     // large error range timeout, in milliseconds
                       0      // maximum acceleration (slew)
-    );
+}
 
 // sensors for odometry
 lemlib::OdomSensors sensors(&vertical, // vertical tracking wheel
@@ -84,10 +84,10 @@ lemlib::OdomSensors sensors(&vertical, // vertical tracking wheel
                             nullptr,     // horizontal tracking wheel 2, set to
                                      // nullptr as we don't have a second one
                             &imu // inertial sensor
-);
+);*/
 
 // input curve for throttle input during driver control
-lemlib::ExpoDriveCurve
+/*lemlib::ExpoDriveCurve
     throttleCurve(3,    // joystick deadband out of 127
                   7,    // minimum output where drivetrain will move out of 127
                   0.999 // expo curve gain
@@ -106,10 +106,10 @@ lemlib::ExpoDriveCurve
 lemlib::Chassis chassis(drivetrain, linearController, angularController,
                         sensors, &throttleCurve, &steerCurve
 
-);
+);*/
 
 // >> V5 part
-#include "robot-config.h"
+
 #include "lemlib/api.hpp"
 #include "lemlib/chassis/chassis.hpp"
 #include "lemlib/chassis/trackingWheel.hpp"

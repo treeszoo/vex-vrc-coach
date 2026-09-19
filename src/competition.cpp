@@ -24,6 +24,8 @@
 #include "robot_config.h"
 #include "robot_config_data.h"
 #include "roller_control.h"
+#include "subsystem/rope.h"
+#include "subsystem/toggle.h"
 #include <cstdio>
 #include <cstring>
 
