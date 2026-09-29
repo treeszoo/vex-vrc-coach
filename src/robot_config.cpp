@@ -132,8 +132,8 @@ pros::Motor Righttoggle(-17,pros::MotorGearset::green);
 pros::MotorGroup Rope({-5,15},pros::MotorGearset::green);
 
 //drivetrain
-pros::MotorGroup leftMotors({-1, 2, -3},pros::MotorGearset::blue);
-pros::MotorGroup rightMotors({11, -12, 13}, pros::MotorGearset::blue);
+pros::MotorGroup leftMotors({1, -2, 3},pros::MotorGearset::blue);
+pros::MotorGroup rightMotors({-8, 9, 10}, pros::MotorGearset::blue);
 
 
 
