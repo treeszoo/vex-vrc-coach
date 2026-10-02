@@ -43,6 +43,8 @@ struct AutonConfig {
   bool useColorSensor = false;
   bool aggressive = false;
   bool pushAlliance = false;
+  bool tank_mode = false;
+  bool arcade_mode = false;
 };
 
 // Configuration file path on SD card
@@ -56,6 +58,10 @@ constexpr TeamColor TEAM_COLOR = TeamColor::RED;
 constexpr bool USE_COLOR_SENSOR = false; // Disabled for safety
 constexpr bool AGGRESSIVE = false;
 constexpr bool PUSH_ALLIANCE = false;
+constexpr bool ARCADE_MODE = false;
+constexpr bool TANK_MODE = false;
+
+
 } // namespace ConfigDefaults
 
 /**

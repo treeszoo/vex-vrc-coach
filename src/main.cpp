@@ -25,9 +25,9 @@ static bool claw_con = false;
 static bool toggle_con = false;
 static bool touch_con = false;
 
-/**
- * Compile-time application mode selection.
- */
+
+// Compile-time application mode selection.
+ 
 enum class AppMode {
   COMPETITION, // Normal competition mode (autonomous + opcontrol)
   CONFIG_UI,   // Touchscreen configuration UI
@@ -43,7 +43,7 @@ enum class AppMode {
  * │  AppMode::LOG_VIEWER   - For post-match logs (upload to slot 2)│
  * └─────────────────────────────────────────────────────────────────┘
  */
-constexpr AppMode APP_MODE = AppMode::COMPETITION;
+constexpr AppMode APP_MODE = AppMode:: CONFIG_UI;
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.

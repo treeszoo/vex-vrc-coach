@@ -88,15 +88,17 @@ static bool loadRobotConfig() {
     return false;
   }
 
-  int auton = -1, color = -1, colorSensor = -1, aggr = -1, push = -1;
+  int auton = -1, color = -1, colorSensor = -1, aggr = -1, push = -1,
+  tank_mode = -1, arcade_mode = -1;
+
   char line[64];
 
   while (fgets(line, sizeof(line), file)) {
     sscanf(line, "auton=%d", &auton);
     sscanf(line, "color=%d", &color);
     sscanf(line, "use_color_sensor=%d", &colorSensor);
-    sscanf(line, "aggressive=%d", &aggr);
-    sscanf(line, "push_alliance=%d", &push);
+    sscanf(line, "aggressive=%d", &tank_mode);
+    sscanf(line, "push_alliance=%d", &arcade_mode);
   }
   fclose(file);
 
@@ -109,11 +111,11 @@ static bool loadRobotConfig() {
   if (colorSensor == 0 || colorSensor == 1) {
     autonConfig.useColorSensor = (colorSensor == 1 && optical.is_installed());
   }
-  if (aggr == 0 || aggr == 1) {
-    autonConfig.aggressive = (aggr == 1);
+  if (tank_mode == 0 || tank_mode == 1) {
+    autonConfig.tank_mode = (tank_mode == 1);
   }
-  if (push == 0 || push == 1) {
-    autonConfig.pushAlliance = (push == 1);
+  if (arcade_mode == 0 || arcade_mode == 1) {
+    autonConfig.arcade_mode = (arcade_mode == 1);
   }
 
   return true;
@@ -274,9 +276,17 @@ void opcontrol() {
     }
 
     // Drive control
+    // Drive control
     int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-    int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-    chassis.arcade(leftY, rightX * 0.85);
+
+    if (autonConfig.tank_mode && !autonConfig.arcade_mode) {
+      int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+      chassis.tank(leftY, rightY);
+    } else {
+      // Default to arcade (Split-Arcade)
+      int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+      chassis.arcade(leftY, rightX * 0.85);
+    }
 
     // Determine current roller operation based on button state
     // L1 => outtake high goal (with intake and anti-jam)
@@ -354,11 +364,19 @@ stopRopeTask();
     uint32_t start_time = pros::millis();
     pros::Task toggleTask(toggle_task_fn, nullptr, "Toggle Task");
 
-    while (true) {
+    while (true) 
+    {
         // 1. Drivetrain Control
+       // 1. Drivetrain Control
         int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-        int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-        chassis.arcade(leftY, rightX * DTkp);
+
+        if (autonConfig.tank_mode && !autonConfig.arcade_mode) {
+          int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+          chassis.tank(leftY, rightY);
+        } else {
+          int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+          chassis.arcade(leftY, rightX * DTkp);
+        }
 
         // 2. Pneumatics / Toggles
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
@@ -370,6 +388,14 @@ stopRopeTask();
             claw_con = !claw_con;
             claw.set_value(claw_con);
         }
+
+        // Toggle Drive Mode on button press (D-Pad Left)
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+            autonConfig.arcade_mode = !autonConfig.arcade_mode;
+            autonConfig.tank_mode = !autonConfig.arcade_mode; // Keep them mutually exclusive
+
+            // Haptic rumble confirmation
+            controller.rumble(autonConfig.arcade_mode ? "." : "..");}
 
         if (pros::millis() - start_time >= 90000) {
             if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {

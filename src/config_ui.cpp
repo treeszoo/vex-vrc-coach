@@ -130,6 +130,8 @@ static TeamColor currentColor = ConfigDefaults::TEAM_COLOR;
 static bool useColorSensor = ConfigDefaults::USE_COLOR_SENSOR;
 static bool aggressive = ConfigDefaults::AGGRESSIVE;
 static bool pushAlliance = ConfigDefaults::PUSH_ALLIANCE;
+static bool arcade_mode = ConfigDefaults::ARCADE_MODE;
+static bool tank_mode = ConfigDefaults::TANK_MODE;
 
 // Touch debounce tracking
 static uint32_t lastTouchTime = 0;
@@ -302,7 +304,7 @@ static void drawBottomRow() {
   // Aggressive checkbox
   drawCheckbox(UI::Bottom::AGGR_CB_X1, UI::Bottom::AGGR_CB_Y1,
                UI::Bottom::AGGR_CB_X2, UI::Bottom::AGGR_CB_Y2,
-               aggressive);
+               tank_mode);
   screen::set_pen(UI::COLOR_TEXT);
   screen::print(TEXT_MEDIUM, UI::Bottom::AGGR_LABEL_X, UI::Bottom::AGGR_LABEL_Y,
   //              "Aggressive");
@@ -311,7 +313,7 @@ static void drawBottomRow() {
   // Push Alliance checkbox
   drawCheckbox(UI::Bottom::PUSH_CB_X1, UI::Bottom::PUSH_CB_Y1,
                UI::Bottom::PUSH_CB_X2, UI::Bottom::PUSH_CB_Y2,
-               pushAlliance);
+               arcade_mode);
   screen::set_pen(UI::COLOR_TEXT);
   screen::print(TEXT_MEDIUM, UI::Bottom::PUSH_LABEL_X, UI::Bottom::PUSH_LABEL_Y,
 //                "Push Alliance");
@@ -354,8 +356,8 @@ static bool saveConfig() {
   fprintf(file, "use_color_sensor=%d\n", useColorSensor ? 1 : 0);
 //  fprintf(file, "aggressive=%d\n", aggressive ? 1 : 0);
 //  fprintf(file, "push_alliance=%d\n", pushAlliance ? 1 : 0);
-  fprintf(file, "Tank=%d\n", aggressive ? 1 : 0);
-  fprintf(file, "Arcade=%d\n", pushAlliance ? 1 : 0);
+  fprintf(file, "Tank=%d\n", tank_mode ? 1 : 0);
+  fprintf(file, "Arcade=%d\n", arcade_mode ? 1 : 0);
   fclose(file);
   return true;
 }
@@ -375,8 +377,8 @@ static bool loadConfig() {
     sscanf(line, "auton=%d", &auton);
     sscanf(line, "color=%d", &color);
     sscanf(line, "use_color_sensor=%d", &colorSensor);
-    sscanf(line, "aggressive=%d", &aggr);
-    sscanf(line, "push_alliance=%d", &push);
+    sscanf(line, "tank_mode=%d", &aggr);
+    sscanf(line, "arcade_mode=%d", &push);
   }
   fclose(file);
 
@@ -390,10 +392,10 @@ static bool loadConfig() {
     useColorSensor = (colorSensor == 1);
   }
   if (aggr == 0 || aggr == 1) {
-    aggressive = (aggr == 1);
+    tank_mode = (aggr == 1);
   }
   if (push == 0 || push == 1) {
-    pushAlliance = (push == 1);
+    arcade_mode = (push == 1);
   }
 
   return true;
@@ -415,11 +417,11 @@ static void showSaveConfirmation(bool success) {
   if (success) {
     screen::print(TEXT_MEDIUM, msgX1 + 75, msgY1 + 10, "CONFIG SAVED!");
     screen::print(TEXT_MEDIUM, msgX1 + 20, msgY1 + 32, "Auton: %s  Aggr: %s",
-                  getAutonName(currentAuton), aggressive ? "ON" : "OFF");
+                  getAutonName(currentAuton), tank_mode ? "ON" : "OFF");
     screen::print(TEXT_MEDIUM, msgX1 + 20, msgY1 + 52, "Color: %s  Sensor: %s",
                   getColorName(currentColor), useColorSensor ? "ON" : "OFF");
     screen::print(TEXT_MEDIUM, msgX1 + 20, msgY1 + 72, "Push Alliance: %s",
-                  pushAlliance ? "ON" : "OFF");
+                  arcade_mode ? "ON" : "OFF");
   } else {
     screen::print(TEXT_MEDIUM, msgX1 + 70, msgY1 + 25, "SAVE FAILED!");
     screen::print(TEXT_MEDIUM, msgX1 + 55, msgY1 + 50, "Check SD card");
