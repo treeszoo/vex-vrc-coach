@@ -305,7 +305,8 @@ static void drawBottomRow() {
                aggressive);
   screen::set_pen(UI::COLOR_TEXT);
   screen::print(TEXT_MEDIUM, UI::Bottom::AGGR_LABEL_X, UI::Bottom::AGGR_LABEL_Y,
-                "Aggressive");
+  //              "Aggressive");
+       "Tank");
 
   // Push Alliance checkbox
   drawCheckbox(UI::Bottom::PUSH_CB_X1, UI::Bottom::PUSH_CB_Y1,
@@ -313,7 +314,8 @@ static void drawBottomRow() {
                pushAlliance);
   screen::set_pen(UI::COLOR_TEXT);
   screen::print(TEXT_MEDIUM, UI::Bottom::PUSH_LABEL_X, UI::Bottom::PUSH_LABEL_Y,
-                "Push Alliance");
+//                "Push Alliance");
+"Arcade");
 }
 
 static void drawSaveButton() {
@@ -350,9 +352,10 @@ static bool saveConfig() {
   fprintf(file, "auton=%d\n", static_cast<int>(currentAuton));
   fprintf(file, "color=%d\n", static_cast<int>(currentColor));
   fprintf(file, "use_color_sensor=%d\n", useColorSensor ? 1 : 0);
-  fprintf(file, "aggressive=%d\n", aggressive ? 1 : 0);
-  fprintf(file, "push_alliance=%d\n", pushAlliance ? 1 : 0);
-
+//  fprintf(file, "aggressive=%d\n", aggressive ? 1 : 0);
+//  fprintf(file, "push_alliance=%d\n", pushAlliance ? 1 : 0);
+  fprintf(file, "Tank=%d\n", aggressive ? 1 : 0);
+  fprintf(file, "Arcade=%d\n", pushAlliance ? 1 : 0);
   fclose(file);
   return true;
 }
